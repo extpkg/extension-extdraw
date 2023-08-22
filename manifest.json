@@ -8,8 +8,11 @@
 	"homepage_url": "https://tldraw.com/",
 	"icons": {
 		"128": "icon-128.png",
+		"128-dark": "icon-128-dark.png",
 		"background": "icon-background.png",
-		"banner": "icon-banner.png"
+		"background-dark": "icon-background-dark.png",
+		"banner": "icon-banner.png",
+		"banner-dark": "icon-banner-dark.png"
 	},
 	"scripts": [
 		"main.js"
