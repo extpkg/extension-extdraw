@@ -1,18 +1,18 @@
 {
 	"manifest_version": "ext-v1",
 	"name": "TLDraw - A Very Good Whiteboard",
-	"version": "1.0.5",
+	"version": "1.0.6",
 	"short_name": "TLDraw",
 	"description": "A very good digital whiteboard. Supports dark mode, drag-and-drop media, and more.",
 	"author": "EXT, Inc.",
 	"homepage_url": "https://tldraw.com/",
 	"icons": {
-		"128": "icon-128.png",
-		"128-dark": "icon-128-dark.png",
-		"background": "icon-background.png",
-		"background-dark": "icon-background-dark.png",
-		"banner": "icon-banner.png",
-		"banner-dark": "icon-banner-dark.png"
+		"128": "icons/icon-128.png",
+		"128-dark": "icons/icon-128-dark.png",
+		"background": "icons/icon-background.png",
+		"background-dark": "icons/icon-background-dark.png",
+		"banner": "icons/icon-banner.png",
+		"banner-dark": "icons/icon-banner-dark.png"
 	},
 	"scripts": [
 		"main.js"
