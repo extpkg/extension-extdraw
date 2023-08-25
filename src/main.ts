@@ -103,7 +103,7 @@ async function removeEntry(entry: Entry): Promise<void> {
   await ext.windows.remove(entry.window.id)
   await ext.tabs.remove(entry.tab.id)
   await ext.websessions.remove(entry.websession.id)
-  await ext.webviews.remove(entry.websession.id)
+  await ext.webviews.remove(entry.webview.id)
 }
 
 // Tab was removed by another extension
