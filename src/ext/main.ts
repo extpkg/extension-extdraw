@@ -56,7 +56,7 @@ ext.runtime.onExtensionClick.addListener(async () => {
     await ext.webviews.attach(webview.id, window.id)
     await ext.webviews.setBounds(webview.id, { x: 0, y: 0, width: size.width, height: size.height })
     await ext.webviews.setAutoResize(webview.id, { width: true, height: true })
-    await ext.webviews.loadFile(webview.id, 'src/index.html')
+    await ext.webviews.loadFile(webview.id, 'tldraw/index.html')
     
     // Save entry
     entries.push({

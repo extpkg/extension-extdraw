@@ -15,5 +15,5 @@
       "@extpkg/types-windows"
     ]
   },
-  "include": ["./src/main.ts"]
+  "include": ["**/*.ts", "**/*.tsx"]
 }

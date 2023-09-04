@@ -1,7 +1,7 @@
 {
 	"manifest_version": "ext-v1",
 	"name": "TLDraw - A Very Good Whiteboard",
-	"version": "1.0.6",
+	"version": "1.0.7",
 	"short_name": "TLDraw",
 	"description": "A very good digital whiteboard. Supports dark mode, drag-and-drop media, and more.",
 	"author": "EXT, Inc.",

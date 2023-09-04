@@ -36,8 +36,8 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 'off'
   },
   'ignorePatterns': [
-    'webpack.config.js',
-    'src/src/*',
+    'webpack.ext.js',
+    'webpack.tldraw.js',
     'dist/*'
   ]
 }
