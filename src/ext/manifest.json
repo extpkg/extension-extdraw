@@ -24,7 +24,7 @@
 		"windows": {},
 		"webviews": {},
 		"websessions": {
-			"permissions": [
+			"optional_permissions": [
 				"create.persistent"
 			]
 		}

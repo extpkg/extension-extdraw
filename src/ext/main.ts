@@ -14,6 +14,13 @@ const entries: Entry[] = []
 
 // Extension clicked
 ext.runtime.onExtensionClick.addListener(async () => {
+
+  // Objects to create
+  let webview: ext.webviews.Webview | null = null
+  let websession: ext.websessions.Websession | null = null
+  let window: ext.windows.Window | null = null
+  let tab: ext.tabs.Tab | null = null
+  
   try {
     
     // Get websession partition
@@ -26,7 +33,7 @@ ext.runtime.onExtensionClick.addListener(async () => {
     }
 
     // Create window
-    const window = await ext.windows.create({
+    window = await ext.windows.create({
       title: 'TLDraw - #' + partition,
       icon: 'icons/icon-128.png',
       fullscreenable: true,
@@ -35,7 +42,7 @@ ext.runtime.onExtensionClick.addListener(async () => {
     })
 
     // Create tab
-    const tab = await ext.tabs.create({
+    tab = await ext.tabs.create({
       icon: 'icons/icon-128.png',
       icon_dark: 'icons/icon-128-dark.png',
       text: 'TLDraw - #' + partition,
@@ -43,16 +50,21 @@ ext.runtime.onExtensionClick.addListener(async () => {
       closable: true,
     })
 
+    // Check if persistent permission is granted
+    const permissions = await ext.runtime.getPermissions()
+    const persistent = permissions['websessions']?.find(v => v == 'create.persistent') !== undefined
+
     // Create websession
-    const websession = await ext.websessions.create({
+    websession = await ext.websessions.create({
       partition: partition.toString(),
-      persistent: true,
+      persistent: persistent,
       global: false,
     })
 
     // Create webview
-    const webview = await ext.webviews.create({ websession: websession })
+    webview = await ext.webviews.create({ websession: websession })
     const size = await ext.windows.getContentSize(window.id)
+    await ext.webviews.openDevTools(webview.id, { mode: 'detach' })
     await ext.webviews.attach(webview.id, window.id)
     await ext.webviews.setBounds(webview.id, { x: 0, y: 0, width: size.width, height: size.height })
     await ext.webviews.setAutoResize(webview.id, { width: true, height: true })
@@ -71,6 +83,12 @@ ext.runtime.onExtensionClick.addListener(async () => {
 
     // Print error
     console.error('ext.runtime.onExtensionClick', JSON.stringify(error))
+
+    // Delete objects
+    if (window) await ext.windows.remove(window.id)
+    if (tab) await ext.tabs.remove(tab.id)
+    if (websession) await ext.websessions.remove(websession.id)
+    if (webview) await ext.webviews.remove(webview.id)
 
   }
 })
