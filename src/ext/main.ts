@@ -33,9 +33,11 @@ ext.runtime.onExtensionClick.addListener(async () => {
     }
 
     // Create window
+    const darkMode = await ext.windows.getPlatformDarkMode()
+    const icon = darkMode ? 'icons/icon-128-dark.png' : 'icons/icon-128.png'
     window = await ext.windows.create({
       title: 'TLDraw - #' + partition,
-      icon: 'icons/icon-128.png',
+      icon: icon,
       fullscreenable: true,
       vibrancy: false,
       frame: true,
@@ -124,6 +126,16 @@ async function removeEntry(entry: Entry): Promise<void> {
   await ext.websessions.remove(entry.websession.id)
   await ext.webviews.remove(entry.webview.id)
 }
+
+// Dark mode was updated
+ext.windows.onUpdatedDarkMode.addListener(async (_event, details) => {
+  const icon = details.enabled ? 'icons/icon-128-dark.png' : 'icons/icon-128.png'
+  for (const entry of entries) {
+    await ext.windows.update(entry.window.id, {
+      icon: icon
+    })
+  }
+})
 
 // Tab was removed by another extension
 ext.tabs.onRemoved.addListener(async (event) => {
