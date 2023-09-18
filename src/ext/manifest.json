@@ -18,12 +18,23 @@
 		"main.js"
 	],
 	"modules": {
-		"console": {},
-		"runtime": {},
-		"tabs": {},
-		"windows": {},
-		"webviews": {},
+		"console": {
+			"module_version": "1.0.1"
+		},
+		"runtime": {
+			"module_version": "1.2.1"
+		},
+		"tabs": {
+			"module_version": "1.1.0"
+		},
+		"windows": {
+			"module_version": "1.1.0"
+		},
+		"webviews": {
+			"module_version": "1.0.2"
+		},
 		"websessions": {
+			"module_version": "1.0.1",
 			"optional_permissions": [
 				"create.persistent"
 			]

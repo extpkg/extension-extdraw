@@ -54,7 +54,7 @@ ext.runtime.onExtensionClick.addListener(async () => {
 
     // Check if persistent permission is granted
     const permissions = await ext.runtime.getPermissions()
-    const persistent = permissions['websessions']?.find(v => v == 'create.persistent') !== undefined
+    const persistent = (permissions['websessions'] ?? {})['create.persistent']?.granted ?? false
 
     // Create websession
     websession = await ext.websessions.create({
@@ -66,7 +66,6 @@ ext.runtime.onExtensionClick.addListener(async () => {
     // Create webview
     webview = await ext.webviews.create({ websession: websession })
     const size = await ext.windows.getContentSize(window.id)
-    await ext.webviews.openDevTools(webview.id, { mode: 'detach' })
     await ext.webviews.attach(webview.id, window.id)
     await ext.webviews.setBounds(webview.id, { x: 0, y: 0, width: size.width, height: size.height })
     await ext.webviews.setAutoResize(webview.id, { width: true, height: true })
