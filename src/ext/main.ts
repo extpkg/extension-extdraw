@@ -2,10 +2,10 @@
 
 // Entry type
 interface Entry {
-  window: ext.windows.Window
-  tab: ext.tabs.Tab
-  websession: ext.websessions.Websession
-  webview: ext.webviews.Webview
+  window: ext.windows.Window | null
+  tab: ext.tabs.Tab | null
+  websession: ext.websessions.Websession | null
+  webview: ext.webviews.Webview | null
   partition: number
 }
 
@@ -20,7 +20,8 @@ ext.runtime.onExtensionClick.addListener(async () => {
   let websession: ext.websessions.Websession | null = null
   let window: ext.windows.Window | null = null
   let tab: ext.tabs.Tab | null = null
-  
+  let entry: Entry | null = null
+
   try {
     
     // Get websession partition
@@ -31,6 +32,18 @@ ext.runtime.onExtensionClick.addListener(async () => {
         i = 0
       }
     }
+
+    // Create entry with partition
+    entry = {
+      window: null,
+      tab: null,
+      websession: null,
+      webview: null,
+      partition: partition,
+    }
+
+    // Save entry with partition to prevent it from being reused
+    entries.push(entry)
 
     // Create window
     const darkMode = await ext.windows.getPlatformDarkMode()
@@ -73,14 +86,11 @@ ext.runtime.onExtensionClick.addListener(async () => {
     await ext.webviews.setAutoResize(webview.id, { width: true, height: true })
     await ext.webviews.loadFile(webview.id, 'tldraw/index.html')
     
-    // Save entry
-    entries.push({
-      window: window,
-      tab: tab,
-      websession: websession,
-      webview: webview,
-      partition: partition,
-    })
+    // Save entry objects
+    entry.window = window
+    entry.tab = tab
+    entry.websession = websession
+    entry.webview = webview
 
   } catch (error) {
 
@@ -92,15 +102,28 @@ ext.runtime.onExtensionClick.addListener(async () => {
     if (tab) await ext.tabs.remove(tab.id)
     if (websession) await ext.websessions.remove(websession.id)
     if (webview) await ext.webviews.remove(webview.id)
+    if (entry) getEntryFromPartition(entry.partition, true)
 
   }
 })
+
+// Get and optionally remove entry from partition
+function getEntryFromPartition(partition: number, remove: boolean): Entry | null {
+  for (let i = 0; i < entries.length; i++) {
+    const entry = entries[i]
+    if (entry.partition == partition) {
+      if (remove) entries.splice(i, 1)
+      return entry
+    }
+  }
+  return null
+}
 
 // Get and optionally remove entry from tab id
 function getEntryFromTabId(id: string, remove: boolean): Entry | null {
   for (let i = 0; i < entries.length; i++) {
     const entry = entries[i]
-    if (entry.tab.id == id) {
+    if (entry.tab?.id == id) {
       if (remove) entries.splice(i, 1)
       return entry
     }
@@ -112,7 +135,7 @@ function getEntryFromTabId(id: string, remove: boolean): Entry | null {
 function getEntryFromWindowId(id: string, remove: boolean): Entry | null {
   for (let i = 0; i < entries.length; i++) {
     const entry = entries[i]
-    if (entry.window.id == id) {
+    if (entry.window?.id == id) {
       if (remove) entries.splice(i, 1)
       return entry
     }
@@ -122,19 +145,21 @@ function getEntryFromWindowId(id: string, remove: boolean): Entry | null {
 
 // Remove entry objects
 async function removeEntry(entry: Entry): Promise<void> {
-  await ext.windows.remove(entry.window.id)
-  await ext.tabs.remove(entry.tab.id)
-  await ext.websessions.remove(entry.websession.id)
-  await ext.webviews.remove(entry.webview.id)
+  if (entry.window) await ext.windows.remove(entry.window.id)
+  if (entry.tab) await ext.tabs.remove(entry.tab.id)
+  if (entry.websession) await ext.websessions.remove(entry.websession.id)
+  if (entry.webview) await ext.webviews.remove(entry.webview.id)
 }
 
 // Dark mode was updated
 ext.windows.onUpdatedDarkMode.addListener(async (_event, details) => {
   const icon = details.enabled ? 'icons/icon-128-dark.png' : 'icons/icon-128.png'
   for (const entry of entries) {
-    await ext.windows.update(entry.window.id, {
-      icon: icon
-    })
+    if (entry.window) {
+      await ext.windows.update(entry.window.id, {
+        icon: icon
+      })
+    }
   }
 })
 
@@ -163,8 +188,10 @@ ext.tabs.onClicked.addListener(async (event) => {
     if (entry === null) return
 
     // Restore and focus window
-    await ext.windows.restore(entry.window.id)
-    await ext.windows.focus(entry.window.id)
+    if (entry.window) {
+      await ext.windows.restore(entry.window.id)
+      await ext.windows.focus(entry.window.id)
+    }
 
   } catch (error) {
 
