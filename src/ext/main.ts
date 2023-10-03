@@ -41,6 +41,8 @@ ext.runtime.onExtensionClick.addListener(async () => {
       fullscreenable: true,
       vibrancy: false,
       frame: true,
+      minWidth: 500,
+      minHeight: 270,
     })
 
     // Create tab
