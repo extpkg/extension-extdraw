@@ -1,43 +1,38 @@
 {
-	"manifest_version": "ext-v1",
-	"name": "TLDraw - A Very Good Whiteboard",
-	"version": "1.0.7",
-	"short_name": "TLDraw",
-	"description": "A very good digital whiteboard. Supports dark mode, drag-and-drop media, and more.",
-	"author": "EXT, Inc.",
-	"homepage_url": "https://tldraw.com/",
-	"icons": {
-		"128": "icons/icon-128.png",
-		"128-dark": "icons/icon-128-dark.png",
-		"background": "icons/icon-background.png",
-		"background-dark": "icons/icon-background-dark.png",
-		"banner": "icons/icon-banner.png",
-		"banner-dark": "icons/icon-banner-dark.png"
-	},
-	"scripts": [
-		"main.js"
-	],
-	"modules": {
-		"console": {
-			"module_version": "1.0.1"
-		},
-		"runtime": {
-			"module_version": "1.2.1"
-		},
-		"tabs": {
-			"module_version": "1.1.0"
-		},
-		"windows": {
-			"module_version": "1.1.0"
-		},
-		"webviews": {
-			"module_version": "1.0.2"
-		},
-		"websessions": {
-			"module_version": "1.0.1",
-			"optional_permissions": [
-				"create.persistent"
-			]
-		}
-	}
+  "manifest_version": "ext-v1",
+  "name": "EXTDraw - Your Personal Whiteboard",
+  "version": "1.0.7",
+  "short_name": "EXTDraw",
+  "description": "A very good digital whiteboard. Supports dark mode, drag-and-drop media, and more.",
+  "author": "EXT, Inc.",
+  "icons": {
+    "128": "icons/128.png",
+    "128-dark": "icons/128-dark.png",
+    "background": "icons/background.png",
+    "background-dark": "icons/background.png",
+    "banner": "icons/banner.png",
+    "banner-dark": "icons/banner.png"
+  },
+  "scripts": ["main.js"],
+  "modules": {
+    "console": {
+      "module_version": "1.0.1"
+    },
+    "runtime": {
+      "module_version": "1.2.1"
+    },
+    "tabs": {
+      "module_version": "1.1.0"
+    },
+    "windows": {
+      "module_version": "1.1.0"
+    },
+    "webviews": {
+      "module_version": "1.0.2"
+    },
+    "websessions": {
+      "module_version": "1.0.1",
+      "optional_permissions": ["create.persistent"]
+    }
+  }
 }

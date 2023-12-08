@@ -1,0 +1,70 @@
+name: Cook and release an EXT app
+
+on:
+  push:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "lts/*"
+
+      - run: npm ci
+
+      - name: Create EXT extension from dist
+        run: |
+          echo "${{ secrets.PRIVATE_KEY }}" > key.pem
+          npm run build
+          npx ext-packager -k key.pem -f ${{ vars.S3_FILE }}
+
+      - name: Delete the current release
+        run: |
+          gh release delete latest --cleanup-tag -y
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Cook release info
+        id: info
+        run: |
+          EXT_NAME=$(jq -r '.name' src/ext/manifest.json)
+          echo "ext_name=$EXT_NAME" >> $GITHUB_OUTPUT
+
+      - name: Upload artifacts to Github
+        id: create_release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: latest
+          name: ${{ steps.info.outputs.ext_name }}
+          artifacts: ${{ vars.S3_FILE }}
+          artifactContentType: "application/zip"
+          body: "This is the latest release of ${{ github.repository }}"
+          makeLatest: true
+
+      - name: Upload artifacts to Cloudflare R2
+        uses: gemwalletcom/r2-upload@v1.0.0
+        with:
+          endpoint: ${{ secrets.S3_ENDPOINT }}
+          access_key_id: ${{ secrets.S3_ACCESS_KEY }}
+          secret_access_key: ${{ secrets.S3_SECRET_ACCESS_KEY }}
+          bucket: ${{ vars.S3_BUCKET }}
+          file: ${{vars.S3_FILE}}
+
+      - name: Purge Cloudflare cache
+        uses: NathanVaughn/actions-cloudflare-purge@v3.1.0
+        with:
+          cf_zone: ${{ secrets.CLOUDFLARE_ZONE_ID }}
+          cf_auth: ${{ secrets.CLOUDFLARE_TOKEN }}
+          files: |
+            ${{ vars.CLOUDFLARE_URL }}

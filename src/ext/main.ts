@@ -47,9 +47,9 @@ ext.runtime.onExtensionClick.addListener(async () => {
 
     // Create window
     const darkMode = await ext.windows.getPlatformDarkMode()
-    const icon = darkMode ? 'icons/icon-128-dark.png' : 'icons/icon-128.png'
+    const icon = darkMode ? 'icons/128-dark.png' : 'icons/128.png'
     window = await ext.windows.create({
-      title: 'TLDraw - #' + partition,
+      title: 'EXTDraw - #' + partition,
       icon: icon,
       fullscreenable: true,
       vibrancy: false,
@@ -60,9 +60,9 @@ ext.runtime.onExtensionClick.addListener(async () => {
 
     // Create tab
     tab = await ext.tabs.create({
-      icon: 'icons/icon-128.png',
-      icon_dark: 'icons/icon-128-dark.png',
-      text: 'TLDraw - #' + partition,
+      icon: 'icons/128.png',
+      icon_dark: 'icons/128-dark.png',
+      text: 'EXTDraw - #' + partition,
       mutable: false,
       closable: true,
     })
@@ -153,7 +153,7 @@ async function removeEntry(entry: Entry): Promise<void> {
 
 // Dark mode was updated
 ext.windows.onUpdatedDarkMode.addListener(async (_event, details) => {
-  const icon = details.enabled ? 'icons/icon-128-dark.png' : 'icons/icon-128.png'
+  const icon = details.enabled ? 'icons/128-dark.png' : 'icons/128.png'
   for (const entry of entries) {
     if (entry.window) {
       await ext.windows.update(entry.window.id, {
