@@ -26,6 +26,7 @@ jobs:
         run: |
           echo "${{ secrets.PRIVATE_KEY }}" > key.pem
           npm run build
+          (rm -f dist.zip && cd dist && zip -r ../dist.zip .)
           npx ext-packager pack ./dist -k key.pem -o ${{ vars.S3_FILE }} -f
 
       - name: Delete the current release
@@ -47,7 +48,7 @@ jobs:
         with:
           tag: latest
           name: ${{ steps.info.outputs.ext_name }}
-          artifacts: ${{ vars.S3_FILE }}
+          artifacts: "${{ vars.S3_FILE }},dist.zip"
           artifactContentType: "application/zip"
           body: "This is the latest release of ${{ github.repository }}"
           makeLatest: true
